@@ -1,0 +1,40 @@
+Package: vineNCE
+Type: Package
+Title: Noise Contrastive Estimation for Vine Copulas
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Michael", "K.",
+      email = "michael.d.kraus@tum.de",
+      role = c("aut", "cre")
+    )
+  )
+Description: Scripts for simulating from and evaluating the likelihood of non-simplified vines
+    can be found in the R script simulate_non_simplified_vine.R.
+    The script plotting methods contains methods for plotting the data,
+    among others a function which performs a pair plot of copula data using ggplot2.
+    Classifier Methods contains the functions for performing noise contrastive estimation
+    with a simplified vine as noise distribution and neural network as correction factors.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    rvinecopulib,
+    keras (>= 2.15.0),
+    tensorflow (>= 2.16.0),
+    ggplot2,
+    kde1d,
+    dplyr,
+    gridExtra,
+    plot3D,
+    pbapply,
+    qrnn,
+    quantreg,
+    rlang,
+    vinereg,
+    parallel,
+    reticulate
+RoxygenNote: 7.3.3
+URL: https://github.com/Michael-K5/vineNCE
+BugReports: https://github.com/Michael-K5/vineNCE/issues
+
