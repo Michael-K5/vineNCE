@@ -11,7 +11,8 @@ perform_quant_reg(
   response_test,
   family_set_name = "nonparametric",
   bottom_quantile_levels = seq(0.05, 0.25, 0.05),
-  top_quantile_levels = seq(0.75, 0.95, 0.05)
+  top_quantile_levels = seq(0.75, 0.95, 0.05),
+  cores = 1
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ Tests whether the alternative model is better}
 \item{top_quantile_levels}{Defaults to seq(0.75,0.95,0.05). Vector of upper quantiles,
 for which it is checked, whether the conditioned quantile estimates are <0.
 Tests whether the simplified model is better}
+
+\item{cores}{How many cores to use for fitting the D-Vine quantile regression model}
 }
 \value{
 : A List of 2 vectors, the first containing the number of samples, for which

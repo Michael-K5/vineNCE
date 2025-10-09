@@ -283,6 +283,7 @@ compute_gvals <- function(
 #' @param top_quantile_levels Defaults to seq(0.75,0.95,0.05). Vector of upper quantiles,
 #' for which it is checked, whether the conditioned quantile estimates are <0.
 #' Tests whether the simplified model is better
+#' @param cores How many cores to use for fitting the D-Vine quantile regression model
 #' @return: A List of 2 vectors, the first containing the number of samples, for which
 #' q(bottom_quantile_levels) > 0 holds, the second containing the number of samples, for
 #' which q(top_quantile_levels) < 0 holds.
@@ -294,14 +295,16 @@ perform_quant_reg <- function(
     response_test,
     family_set_name = "nonparametric",
     bottom_quantile_levels = seq(0.05,0.25,0.05),
-    top_quantile_levels = seq(0.75,0.95,0.05)
+    top_quantile_levels = seq(0.75,0.95,0.05),
+    cores = 1
     ){
   orig_data <- rbind(as.data.frame(covariates_train), as.data.frame(covariates_test))
   cov_train_data <- as.data.frame(covariates_train)
   qreg_data <- cbind(response_train, cov_train_data)
   q_reg <- vinereg::vinereg(response_train ~ . ,
                             family_set=family_set_name,
-                            data=qreg_data)
+                            data=qreg_data,
+                            cores = cores)
   all_quantile_levels <- c(bottom_quantile_levels, top_quantile_levels)
   train_loss <- rep(0,length(all_quantile_levels))
   test_loss <- rep(0,length(all_quantile_levels))
