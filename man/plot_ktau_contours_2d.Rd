@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting_methods.R
 \name{plot_ktau_contours_2d}
 \alias{plot_ktau_contours_2d}
-\title{contours of the cond to ktau function with 2 conditional variables}
+\title{Contours of the cond to ktau function with 2 conditional variables}
 \usage{
 plot_ktau_contours_2d(
   func_list,
@@ -26,5 +26,5 @@ conditioning values of the second conditioning variable, for which the
 functions should be evaluated for the plot.}
 }
 \description{
-contours of the cond to ktau function with 2 conditional variables
+Contours of the cond to ktau function with 2 conditional variables
 }

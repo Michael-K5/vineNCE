@@ -10,14 +10,10 @@ plot_cond_to_ktau_3d(
   title = "",
   u_cond_vals_1 = 1:99/100,
   u_cond_vals_2 = 1:99/100,
-  u_cond_vals_fixed = c(0.3, 0.7)
+  u_cond_vals_fixed = c(0.25, 0.5, 0.75)
 )
 }
 \arguments{
-\item{cond_to_ktau_func}{Function mapping conditioning values to kendall's tau values}
-
-\item{title}{Title of the plot.}
-
 \item{u_cond_vals_1}{Vector, defaults to c(0.01,...,0.99). Contains the
 conditioning values of the first conditioning variable that is not fixed,
 for which the functions should be evaluated for the plot.}
@@ -28,6 +24,11 @@ for which the functions should be evaluated for the plot.}
 
 \item{u_cond_vals_fixed}{Vector, defaults to c(0.3,0.7). Contains the
 conditioning values of the fixed variable.}
+
+\item{func_list}{list of functions for which plots should be created.}
+
+\item{titles}{vector of titles for the plots corresponding to the different
+functions in func_list.}
 }
 \description{
 Several 3d Plots for in total 3 conditioning variables,

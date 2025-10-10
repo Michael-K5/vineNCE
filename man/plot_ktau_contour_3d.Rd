@@ -13,10 +13,6 @@ plot_ktau_contour_3d(
 )
 }
 \arguments{
-\item{cond_to_ktau_func}{Function mapping conditioning values to kendall's tau values}
-
-\item{title}{Title for the plot}
-
 \item{u_cond_vals_1}{Vector, defaults to c(0.01,...,0.99). Contains the
 conditioning values of the first conditioning variable that is not fixed,
 for which the functions should be evaluated for the plot.}
@@ -27,6 +23,11 @@ for which the functions should be evaluated for the plot.}
 
 \item{u_cond_vals_fixed}{Vector, defaults to c(0.25,0.5,0.75). Contains the
 conditioning values of the fixed variable.}
+
+\item{func_list}{list of functions for which plots should be created.}
+
+\item{titles}{vector of titles for the plots corresponding to the different
+functions in func_list.}
 }
 \description{
 Contour plot of ktau for 3 conditioning variables, always one fixed.

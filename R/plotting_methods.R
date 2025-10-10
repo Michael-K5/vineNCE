@@ -361,8 +361,6 @@ u_to_ktau_cubic <- function(a, tau_lower=-0.92, tau_upper=0.92){
       # tau_lower and tau_upper
       scaling_factor <- (tau_upper - tau_lower) / 2
       shift <- (tau_upper + tau_lower) / 2
-      # Onepar families that cannot model negative dependence:
-      # clayton, gumbel, joe
       if(family %in% c("clayton", "gumbel", "joe") && tau_lower <= 0.001){
         scaling_factor <- (tau_upper - 0.001) / 2
         shift <- (tau_upper + 0.001) / 2
@@ -401,7 +399,6 @@ u_to_ktau_cubic <- function(a, tau_lower=-0.92, tau_upper=0.92){
     })
   })
 }
-
 #' Plot of the cond to ktau function with 1 conditioning variable
 #' @param func_list list of functions for which plots should be created
 #' @param titles vector of titles for the plots corresponding to the different
@@ -419,7 +416,13 @@ plot_cond_to_ktau_1d <- function(func_list, titles=-1, u_cond_vals=1:99/100){
     if(all(titles != -1) & i <= length(titles)){
       plot_title <- titles[i]
     }
-    plot(u_cond_vals, ktau_vals, type="l", main=plot_title, xlab="u",ylab="ktau",cex.lab=0.9)
+    plot(u_cond_vals,
+         ktau_vals,
+         type="l",
+         main=plot_title,
+         xlab="u",
+         ylab="ktau",
+         cex.lab=0.9)
   }
   par(mfrow=c(1,1))
 }
@@ -438,8 +441,11 @@ plot_cond_to_ktau_2d <- function(func_list,
                                  titles=-1,
                                  u_cond_vals_1=1:99/100,
                                  u_cond_vals_2=1:99/100){
+  par(mfrow=c(1, length(func_list)), mar=c(1,1,1,1), oma=c(1.5,1.5,4,1.5))
   for(i in 1:length(func_list)){
-    ktau_vals <- matrix(rep(0,length(u_cond_vals_1)*length(u_cond_vals_2)), ncol=length(u_cond_vals_2))
+    ktau_vals <- matrix(
+      rep(0,length(u_cond_vals_1)*length(u_cond_vals_2)),
+      ncol=length(u_cond_vals_2))
     for(j in 1:length(u_cond_vals_1)){
       for(k in 1:length(u_cond_vals_2)){
         ktau_vals[j,k] <- func_list[[i]](c(u_cond_vals_1[j], u_cond_vals_2[k]))
@@ -450,14 +456,15 @@ plot_cond_to_ktau_2d <- function(func_list,
       plot_title <- titles[i]
     }
     # Create a 3D surface plot
+    blue_gradient <- colorRampPalette(c("lightblue", "darkblue"))
     plot3D::persp3D(u_cond_vals_1, u_cond_vals_2, ktau_vals,
                     theta = 30, phi = 20, axes=TRUE, ticktype="detailed",
-                    xlab="u1", ylab="u2", zlab="ktau",
-                    col = "lightblue", border = "black", main=plot_title)
+                    xlab="u1", ylab="u2", zlab="ktau", colvar=ktau_vals,
+                    col = blue_gradient(100), border = "grey", lwd=0.1, main=plot_title)
   }
 }
 
-#' contours of the cond to ktau function with 2 conditional variables
+#' Contours of the cond to ktau function with 2 conditional variables
 #' @param func_list list of functions for which plots should be created
 #' @param titles vector of titles for the plots corresponding to the different
 #' functions in func_list
@@ -483,7 +490,7 @@ plot_ktau_contours_2d <- function(func_list,
     if(all(titles != -1) & i <= length(titles)){
       plot_title <- titles[i]
     }
-    # Create a 3D surface plot
+    # Create a contour plot
     contour(u_cond_vals_1, u_cond_vals_2, ktau_vals, main=plot_title,
             xlab="u1", ylab="u2")
   }
@@ -492,8 +499,9 @@ plot_ktau_contours_2d <- function(func_list,
 
 #' Several 3d Plots for in total 3 conditioning variables,
 #' always one is fixed for the plots.
-#' @param cond_to_ktau_func Function mapping conditioning values to kendall's tau values
-#' @param title Title of the plot.
+#' @param func_list list of functions for which plots should be created.
+#' @param titles vector of titles for the plots corresponding to the different
+#' functions in func_list.
 #' @param u_cond_vals_1 Vector, defaults to c(0.01,...,0.99). Contains the
 #' conditioning values of the first conditioning variable that is not fixed,
 #' for which the functions should be evaluated for the plot.
@@ -506,9 +514,11 @@ plot_cond_to_ktau_3d <- function(cond_to_ktau_func,
                                  title="",
                                  u_cond_vals_1=1:99/100,
                                  u_cond_vals_2=1:99/100,
-                                 u_cond_vals_fixed=c(0.3,0.7)){
+                                 u_cond_vals_fixed=c(0.25,0.5,0.75)){
   # order of mar and oma: bottom, left, top, right. oma=outer margin, mar = inner margin
-  par(mfrow = c(3, length(u_cond_vals_fixed)), mar = c(0.5, 0.5, 1, 0.5), oma = c(0.5, 0.5, 4, 0.5))
+  par(mfrow = c(3, length(u_cond_vals_fixed)),
+      mar = c(1, 1, 1, 1),
+      oma = c(1, 1, 4, 1))
   for(fixed_dim in 1:3){
     for(i in 1:length(u_cond_vals_fixed)){
       ktau_vals <- matrix(rep(0,length(u_cond_vals_1)*length(u_cond_vals_2)),
@@ -540,12 +550,13 @@ plot_cond_to_ktau_3d <- function(cond_to_ktau_func,
         xlab_text <- "u1"
         ylab_text <- "u3"
       }
-      # Create a 3d plot. (theta and phi determine the viewing angles)
+      blue_gradient <- colorRampPalette(c("lightblue", "darkblue"))
+      # Create a 3d plot
       plot3D::persp3D(u_cond_vals_1, u_cond_vals_2, ktau_vals,
                       theta = 30, phi = 20, axes=TRUE, ticktype="detailed",
                       cex.axis=0.5, cex.lab =0.7,
-                      xlab=xlab_text, ylab=ylab_text,zlab="ktau",
-                      col = "lightblue", border = "black", main=plot_title)
+                      xlab=xlab_text, ylab=ylab_text,zlab="ktau",colvar=ktau_vals,
+                      col = blue_gradient(100), border = "grey",lwd=0.1, main=plot_title)
     }
   }
   mtext(title, outer=TRUE, cex=1, line=2, font=2)
@@ -553,8 +564,9 @@ plot_cond_to_ktau_3d <- function(cond_to_ktau_func,
 
 
 #' Contour plot of ktau for 3 conditioning variables, always one fixed.
-#' @param cond_to_ktau_func Function mapping conditioning values to kendall's tau values
-#' @param title Title for the plot
+#' @param func_list list of functions for which plots should be created.
+#' @param titles vector of titles for the plots corresponding to the different
+#' functions in func_list.
 #' @param u_cond_vals_1 Vector, defaults to c(0.01,...,0.99). Contains the
 #' conditioning values of the first conditioning variable that is not fixed,
 #' for which the functions should be evaluated for the plot.
@@ -568,7 +580,9 @@ plot_ktau_contour_3d <- function(cond_to_ktau_func,
                                  u_cond_vals_1=1:99/100,
                                  u_cond_vals_2=1:99/100,
                                  u_cond_vals_fixed=c(0.25,0.5,0.7)){
-  par(mfrow = c(3, length(u_cond_vals_fixed)), mar = c(1.5, 1.5, 1.5, 1.5), oma = c(1.5, 4, 4, 4))
+  par(mfrow = c(3, length(u_cond_vals_fixed)),
+      mar = c(1.5, 1.5, 1.5, 1.5),
+      oma = c(1.5, 4, 4, 4))
   for(fixed_dim in 1:3){
     for(i in 1:length(u_cond_vals_fixed)){
       ktau_vals <- matrix(rep(0,length(u_cond_vals_1)*length(u_cond_vals_2)),
